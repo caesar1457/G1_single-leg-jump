@@ -1,0 +1,24 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+simulator:
+  _target_: humanoidverse.simulator.genesis.genesis.Genesis
+  _recursive_: false
+  config:
+    name: genesis
+    terrain: ${terrain}
+    plane:
+      static_friction: 1.0
+      dynamic_friction: 1.0
+      restitution: 0.0
+    sim:
+      fps: 200
+      control_decimation: 4
+      substeps: 1
+      render_mode: human
+      render_interval: 1
+    scene:
+      num_envs: ${num_envs}
+      env_spacing: ${env.config.env_spacing}
+      replicate_physics: true
+checkpoint: logs/G1_jumps/20250426_222426-jumps1_subject5-motion_tracking-g1_29dof_anneal_23dof/model_25700.pt

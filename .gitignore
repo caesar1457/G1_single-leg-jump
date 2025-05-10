@@ -29,13 +29,13 @@ Thumbs.db
 *.wmv
 
 # logs
-logs
-logs_eval
-runs
-outputs
-results/
-hydra_logs/
-wandb/
+# logs
+# logs_eval
+# runs
+# outputs
+# results/
+# hydra_logs/
+# wandb/
 # other
 *.egg-info
 __pycache__

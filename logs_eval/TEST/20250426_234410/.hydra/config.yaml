@@ -1,0 +1,4 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+checkpoint: logs/G1_jumps/20250426_222426-jumps1_subject5-motion_tracking-g1_29dof_anneal_23dof/model_2200.pt

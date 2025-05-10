@@ -1,0 +1,182 @@
+hydra:
+  run:
+    dir: ${save_dir}
+  sweep:
+    dir: ${save_dir}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.mode=RUN
+    task:
+    - +simulator=isaacgym
+    - +exp=motion_tracking
+    - +domain_rand=NO_domain_rand
+    - +rewards=motion_tracking/reward_motion_tracking_dm_2real
+    - +robot=g1/g1_29dof_anneal_23dof
+    - +terrain=terrain_locomotion_plane
+    - +obs=motion_tracking/deepmimic_a2c_nolinvel_LARGEnoise_history
+    - num_envs=4096
+    - project_name=MotionTracking
+    - experiment_name=MotionTracking_CR7
+    - robot.motion.motion_file=humanoidverse/data/motions/g1_29dof_anneal_23dof/TairanTestbed/singles/0-TairanTestbed_TairanTestbed_CR7_video_CR7_level1_filter_amass.pkl
+    - rewards.reward_penalty_curriculum=True
+    - rewards.reward_penalty_degree=0.00001
+    - env.config.resample_motion_when_training=False
+    - env.config.termination.terminate_when_motion_far=True
+    - env.config.termination_curriculum.terminate_when_motion_far_curriculum=True
+    - env.config.termination_curriculum.terminate_when_motion_far_threshold_min=0.3
+    - env.config.termination_curriculum.terminate_when_motion_far_curriculum_degree=0.000025
+    - robot.asset.self_collisions=0
+  job:
+    name: train_agent
+    chdir: false
+    override_dirname: +domain_rand=NO_domain_rand,+exp=motion_tracking,+obs=motion_tracking/deepmimic_a2c_nolinvel_LARGEnoise_history,+rewards=motion_tracking/reward_motion_tracking_dm_2real,+robot=g1/g1_29dof_anneal_23dof,+simulator=isaacgym,+terrain=terrain_locomotion_plane,env.config.resample_motion_when_training=False,env.config.termination.terminate_when_motion_far=True,env.config.termination_curriculum.terminate_when_motion_far_curriculum=True,env.config.termination_curriculum.terminate_when_motion_far_curriculum_degree=0.000025,env.config.termination_curriculum.terminate_when_motion_far_threshold_min=0.3,experiment_name=MotionTracking_CR7,num_envs=4096,project_name=MotionTracking,rewards.reward_penalty_curriculum=True,rewards.reward_penalty_degree=0.00001,robot.asset.self_collisions=0,robot.motion.motion_file=humanoidverse/data/motions/g1_29dof_anneal_23dof/TairanTestbed/singles/0-TairanTestbed_TairanTestbed_CR7_video_CR7_level1_filter_amass.pkl
+    id: ???
+    num: ???
+    config_name: base
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.1'
+    cwd: /home/caesar/ASAP
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /home/caesar/ASAP/humanoidverse/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /home/caesar/ASAP/logs/MotionTracking/20250426_221652-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof/.hydra
+    choices:
+      obs: motion_tracking/deepmimic_a2c_nolinvel_LARGEnoise_history
+      terrain: terrain_locomotion_plane
+      robot: g1/g1_29dof_anneal_23dof
+      rewards: motion_tracking/reward_motion_tracking_dm_2real
+      domain_rand: NO_domain_rand
+      exp: motion_tracking
+      env: motion_tracking
+      algo: ppo
+      simulator: isaacgym
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false
