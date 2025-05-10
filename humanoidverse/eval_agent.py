@@ -17,7 +17,7 @@ from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from loguru import logger
 
 import threading
-# from pynput import keyboard
+from pynput import keyboard
 
 def on_press(key, env):
     try:

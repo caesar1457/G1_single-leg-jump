@@ -171,27 +171,27 @@ def get_basis_vector(q: Tensor, v: Tensor, w_last: bool) -> Tensor:
     return quat_rotate(q, v, w_last)
 
 @torch.jit.script
-def quat_to_angle_axis(q):
-    # type: (Tensor) -> Tuple[Tensor, Tensor]
-    # computes axis-angle representation from quaternion q
-    # q must be normalized
-    # ZL: could have issues. 
-    min_theta = 1e-5
-    qx, qy, qz, qw = 0, 1, 2, 3
-
-    sin_theta = torch.sqrt(1 - q[..., qw] * q[..., qw])
-    angle = 2 * torch.acos(q[..., qw])
-    angle = normalize_angle(angle)
-    sin_theta_expand = sin_theta.unsqueeze(-1)
-    axis = q[..., qx:qw] / sin_theta_expand
-
-    mask = torch.abs(sin_theta) > min_theta
-    default_axis = torch.zeros_like(axis)
-    default_axis[..., -1] = 1
-
-    angle = torch.where(mask, angle, torch.zeros_like(angle))
-    mask_expand = mask.unsqueeze(-1)
-    axis = torch.where(mask_expand, axis, default_axis)
+def quat_to_angle_axis(q: Tensor, w_last: bool = True) -> Tuple[Tensor, Tensor]:
+    """
+    将四元数 q 转换成 (angle, axis)：
+      - 如果 w_last=True，q 格式为 [x, y, z, w]
+      - 如果 w_last=False，q 格式为 [w, x, y, z]
+    返回：
+      angle: [...], axis: [..., 3]
+    """
+    # 根据 w_last 提取实部 w 和虚部 xyz
+    if w_last:
+        xyz = q[..., :3]
+        w = q[..., 3]
+    else:
+        w = q[..., 0]
+        xyz = q[..., 1:]
+    # 计算 angle = 2 * arccos(w)
+    w_clamped = w.clamp(-1.0, 1.0)
+    angle = 2 * torch.acos(w_clamped)
+    # 计算 axis = xyz / sin(angle/2)
+    sin_half = torch.sin(angle * 0.5).unsqueeze(-1)
+    axis = xyz / sin_half.clamp(min=1e-6)
     return angle, axis
 
 @torch.jit.script
