@@ -77,8 +77,8 @@ For libpython error:
 - Set LD_LIBRARY_PATH:
     ```bash
     export LD_LIBRARY_PATH=</path/to/conda/envs/your_env/lib>:$LD_LIBRARY_PATH
-    
-    export LD_LIBRARY_PATH=/home/caesar/anaconda3/envs/lafan-data/lib:$LD_LIBRARY_PATH
+
+    export LD_LIBRARY_PATH=/home/caesar/anaconda3/envs/hvgym/lib:$LD_LIBRARY_PATH
     ```
 
 ### Install HumanoidVerse
@@ -154,8 +154,6 @@ python humanoidverse/train_agent.py \
 python humanoidverse/eval_agent.py \
 +checkpoint=logs/G1_jumps/20250426_222426-jumps1_subject5-motion_tracking-g1_29dof_anneal_23dof/model_25700.pt
 ```
-python humanoidverse/eval_agent.py \
-+checkpoint=logs/G1_jumps/20250427_162320-jumps1_subject5-motion_tracking-g1_29dof_anneal_23dof/model_100.pt
 </details>
 
 ## IsaacLab Environment
