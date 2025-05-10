@@ -76,6 +76,8 @@ For libpython error:
     ```
 - Set LD_LIBRARY_PATH:
     ```bash
+    export LD_LIBRARY_PATH=</path/to/conda/envs/your_env/lib>:$LD_LIBRARY_PATH
+    
     export LD_LIBRARY_PATH=/home/caesar/anaconda3/envs/lafan-data/lib:$LD_LIBRARY_PATH
     ```
 
